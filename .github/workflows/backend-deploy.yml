@@ -1,0 +1,26 @@
+name: Deploy Backend to AWS EB
+
+on:
+  push:
+    paths:
+      - 'life-insurance-backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          application_name: life-insurance-backend
+          environment_name: life-insurance-backend-env
+          version_label: github-${{ github.sha }}
+          region: ap-south-1
+          bucket_name: your-eb-s3-bucket
+          bucket_key: life-insurance-backend-${{ github.sha }}.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
