@@ -25,6 +25,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
 
+  // Validation error state
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   // Page loader effect
   React.useEffect(() => {
     const timer = setTimeout(() => setPageLoading(false), 2000);
@@ -83,16 +86,42 @@ export default function Home() {
     );
   }
 
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (isNaN(form.age) || form.age < 0 || form.age > 120) {
+      newErrors.age = 'Age must be between 0 and 120.';
+    }
+    if (isNaN(form.income) || form.income < 0) {
+      newErrors.income = 'Income must be a positive number.';
+    }
+    if (isNaN(form.dependents) || form.dependents < 0 || form.dependents > 20) {
+      newErrors.dependents = 'Dependents must be between 0 and 20.';
+    }
+    if (!['Low', 'Medium', 'High'].includes(form.risk_tolerance)) {
+      newErrors.risk_tolerance = 'Risk tolerance must be Low, Medium, or High.';
+    }
+    return newErrors;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: name === 'age' || name === 'income' || name === 'dependents' ? parseInt(value) : value });
+    setErrors({ ...errors, [name]: '' }); // Clear error on change
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setResult(null);
 
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setErrors({});
     const res = await fetch('https://life-insurance-backend.onrender.com/recommendation', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -129,11 +158,12 @@ export default function Home() {
               type="number"
               value={form.age}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border border-[#d0e2f3] rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans"
+              className={`w-full p-2 sm:p-3 border ${errors.age ? 'border-red-500' : 'border-[#d0e2f3]'} rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans`}
               required
               min={0}
               max={120}
             />
+            {errors.age && <span className="text-red-500 text-sm mt-1">{errors.age}</span>}
           </div>
           <div className="flex flex-col gap-1">
             <label className="block text-[#434649] font-semibold flex items-center gap-2 font-sans">
@@ -147,10 +177,11 @@ export default function Home() {
               type="number"
               value={form.income}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border border-[#d0e2f3] rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans"
+              className={`w-full p-2 sm:p-3 border ${errors.income ? 'border-red-500' : 'border-[#d0e2f3]'} rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans`}
               required
               min={0}
             />
+            {errors.income && <span className="text-red-500 text-sm mt-1">{errors.income}</span>}
           </div>
           <div className="flex flex-col gap-1">
             <label className="block text-[#434649] font-semibold flex items-center gap-2 font-sans">
@@ -165,11 +196,12 @@ export default function Home() {
               type="number"
               value={form.dependents}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border border-[#d0e2f3] rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans"
+              className={`w-full p-2 sm:p-3 border ${errors.dependents ? 'border-red-500' : 'border-[#d0e2f3]'} rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans`}
               required
               min={0}
               max={20}
             />
+            {errors.dependents && <span className="text-red-500 text-sm mt-1">{errors.dependents}</span>}
           </div>
           <div className="flex flex-col gap-1">
             <label className="block text-[#434649] font-semibold flex items-center gap-2 font-sans">
@@ -183,12 +215,13 @@ export default function Home() {
               name="risk_tolerance"
               value={form.risk_tolerance}
               onChange={handleChange}
-              className="w-full p-2 sm:p-3 border border-[#d0e2f3] rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans"
+              className={`w-full p-2 sm:p-3 border ${errors.risk_tolerance ? 'border-red-500' : 'border-[#d0e2f3]'} rounded-lg focus:ring-2 focus:ring-[#0a66c2] focus:outline-none transition text-base bg-[#f3f6f8] font-sans`}
             >
               <option value="Low">Low</option>
               <option value="Medium">Medium</option>
               <option value="High">High</option>
             </select>
+            {errors.risk_tolerance && <span className="text-red-500 text-sm mt-1">{errors.risk_tolerance}</span>}
           </div>
           <button
             type="submit"

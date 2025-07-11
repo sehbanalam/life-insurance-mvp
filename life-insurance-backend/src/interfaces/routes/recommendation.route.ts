@@ -8,6 +8,8 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   const { age, income, dependents, risk_tolerance } = req.body as SubmissionInput;
 
+  console.log('Received input:', req.body);
+
   if (
     typeof age !== 'number' ||
     typeof income !== 'number' ||
@@ -28,7 +30,7 @@ router.post('/', async (req, res) => {
     res.json(result);
   } catch (err) {
     console.error('DB insert error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'DB insert error:' });
   }
 });
 
