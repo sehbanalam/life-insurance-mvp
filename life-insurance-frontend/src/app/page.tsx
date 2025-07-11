@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 
+// Define the structure of the form input data
 type FormData = {
   age: number;
   income: number;
@@ -8,6 +9,7 @@ type FormData = {
   risk_tolerance: 'Low' | 'Medium' | 'High';
 };
 
+// Define the structure of the backend result
 type Result = {
   recommendation: string;
   explanation: string;
@@ -28,12 +30,13 @@ export default function Home() {
   // Validation error state
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Page loader effect
+  // Trigger page loader animation for 2 seconds on first load
   React.useEffect(() => {
     const timer = setTimeout(() => setPageLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
+  // Show loading spinner page during initial loading
   if (pageLoading) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e9eef6] via-white to-[#d0e2f3]">
@@ -86,6 +89,7 @@ export default function Home() {
     );
   }
 
+  // Validates user input; returns an object with field-specific error messages
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
     if (isNaN(form.age) || form.age < 0 || form.age > 120) {
@@ -103,16 +107,19 @@ export default function Home() {
     return newErrors;
   };
 
+  // Handle form input change and update state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: name === 'age' || name === 'income' || name === 'dependents' ? parseInt(value) : value });
     setErrors({ ...errors, [name]: '' }); // Clear error on change
   };
 
+  // Handle form submission and fetch recommendation
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setResult(null);
 
+    // Run validations
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -120,6 +127,7 @@ export default function Home() {
       return;
     }
 
+    // Call backend API
     setLoading(true);
     setErrors({});
     const res = await fetch('https://life-insurance-backend.onrender.com/recommendation', {
