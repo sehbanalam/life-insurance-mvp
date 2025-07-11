@@ -8,14 +8,12 @@ import { pool } from '../infrastructure/db';
 
 const app = express();
 
-// --- Security Middleware ---
-
 // Set secure HTTP headers
 app.use(helmet());
 
 // Limit CORS to trusted domain (adjust as needed)
 app.use(cors({
-  origin: ['https://life-insurance-mvp.vercel.app'], // Add localhost for dev if needed
+  origin: ['https://life-insurance-mvp.vercel.app'], 
   methods: ['GET', 'POST'],
 }));
 

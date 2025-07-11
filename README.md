@@ -109,28 +109,6 @@ Visit: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## ✅ Stretch Goals (Not Implemented)
-
-- ✅ Secure headers via CORS
-- ☐ Auth (email/password or OTP)
-- ☐ Logging & monitoring (e.g., CloudWatch or Winston)
-- ☐ Rate limiting (express-rate-limit)
-- ☐ Mobile version (React Native)
-
----
-
-## 📄 License
-
-MIT
-
----
-
-## 👨‍💻 Author
-
-Built by Sebu as part of a technical challenge.
-
----
-
 ## ☁️ Deployment to AWS (Optional)
 
 This project is ready for deployment on AWS. Here's how to deploy both the frontend and backend.
@@ -182,3 +160,10 @@ This project is ready for deployment on AWS. Here's how to deploy both the front
 
 3. Upload `out/` or `.next/` to an S3 bucket
 4. Set up CloudFront for CDN + SSL
+
+---
+
+## 📄 License
+
+MIT
+---
