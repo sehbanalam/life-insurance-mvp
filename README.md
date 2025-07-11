@@ -128,3 +128,61 @@ MIT
 ## 👨‍💻 Author
 
 Built by Sebu as part of a technical challenge.
+
+---
+
+## ☁️ Deployment to AWS (Optional)
+
+This project is ready for deployment on AWS. Here's how to deploy both the frontend and backend.
+
+### 🛠 Backend: Deploy to AWS Elastic Beanstalk (Docker)
+
+1. **Install EB CLI**  
+   Follow: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html
+
+2. **Initialize Elastic Beanstalk**
+   ```bash
+   cd life-insurance-backend
+   eb init -p docker life-insurance-backend --region <your-region>
+   ```
+
+3. **Create Environment & Deploy**
+   ```bash
+   eb create life-insurance-backend-env
+   eb deploy
+   ```
+
+4. **Set Environment Variables in EB Console**
+   - `DATABASE_URL`
+   - `PORT=5000`
+
+---
+
+### 🌐 Frontend: Deploy to AWS Amplify or S3 + CloudFront
+
+#### Option A: AWS Amplify (Recommended)
+
+1. **Connect GitHub repo to Amplify Console**
+2. Set build settings (auto-detected for Next.js)
+3. Set root directory to `life-insurance-frontend/`
+4. Deploy
+
+#### Option B: S3 + CloudFront (Manual)
+
+1. Build the app:
+   ```bash
+   cd life-insurance-frontend
+   npm run build
+   ```
+
+2. Export static site (optional):
+   ```bash
+   npm run export
+   ```
+
+3. Upload `out/` or `.next/` to an S3 bucket
+4. Set up CloudFront for CDN + SSL
+
+---
+
+Let me know if you need an `AWS SAM`, `CDK`, or ECS config for infrastructure-as-code.
