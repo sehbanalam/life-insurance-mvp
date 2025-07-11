@@ -182,7 +182,3 @@ This project is ready for deployment on AWS. Here's how to deploy both the front
 
 3. Upload `out/` or `.next/` to an S3 bucket
 4. Set up CloudFront for CDN + SSL
-
----
-
-Let me know if you need an `AWS SAM`, `CDK`, or ECS config for infrastructure-as-code.
